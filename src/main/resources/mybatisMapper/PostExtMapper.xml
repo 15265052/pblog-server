@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.duxiaoyuan.pblog.mapper.PostExtMapper">
+  <resultMap id="BaseResultMap" type="com.duxiaoyuan.pblog.domain.Post">
+    <!--@mbg.generated-->
+    <!--@Table post-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="is_hot" jdbcType="BOOLEAN" property="isHot" />
+    <result column="is_top" jdbcType="BOOLEAN" property="isTop" />
+    <result column="banner_address" jdbcType="VARCHAR" property="bannerAddress" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="upload_time" jdbcType="TIMESTAMP" property="uploadTime" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="views_num" jdbcType="INTEGER" property="viewsNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+    <result column="is_focus" jdbcType="BOOLEAN" property="isFocus" />
+  </resultMap>
+    
+    <resultMap id="PostResultMap" type="com.duxiaoyuan.pblog.model.PostResult" extends="BaseResultMap">
+        <association property="tag" javaType="com.duxiaoyuan.pblog.domain.Tag">
+            <id column="id_1" jdbcType="INTEGER" property="id"/>
+            <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
+        </association>
+    </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, is_hot, is_top, banner_address, title, upload_time, summary, views_num, comment_num, 
+    is_focus, tag_id
+  </sql>
+
+    <select id="selectAll" resultMap="PostResultMap">
+        select
+            a.id,
+            a.is_hot,
+            a.is_top,
+            a.banner_address,
+            a.title,
+            a.upload_time,
+            a.summary,
+            a.views_num,
+            a.comment_num,
+            a.is_focus,
+            a.tag_id,
+            b.`id` as id_1,
+            b.`tag_name`
+        from post a left join tag b  on a.tag_id = b.id
+
+    </select>
+
+    <select id="selectFocus" resultType="com.duxiaoyuan.pblog.domain.Post">
+        select
+            <include refid="Base_Column_List">
+            </include>
+        from post
+        where is_focus = true
+        order by upload_time DESC
+        limit 3
+    </select>
+</mapper>
